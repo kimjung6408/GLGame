@@ -3,10 +3,12 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import models.RawModel;
+import models.TexturedModel;
 import renderEngine.Loader;
-import renderEngine.RawModel;
 import renderEngine.Renderer;
 import shaders.StaticShader;
+import textures.ModelTexture;
 
 import java.nio.*;
 
@@ -119,7 +121,18 @@ public class Main {
 					 0,1,3,
 					 3,1,2
 			 };
-		 RawModel model =loader.loadToVAO(vertices, indices);
+		 
+		 float[] texCoords= {
+			0,0,
+			0,1,
+			1,1,
+			1,0				 
+		 };
+		 
+		 
+		 RawModel model =loader.loadToVAO(vertices, texCoords,indices);
+		 ModelTexture texture=new ModelTexture(loader.loadTexture("girl"));
+		 TexturedModel texturedModel = new TexturedModel(model, texture);
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
@@ -128,7 +141,7 @@ public class Main {
 			renderer.prepare();
 			
 			staticShader.start();
-			renderer.render(model);
+			renderer.render(texturedModel);
 			staticShader.stop();
 
 			glfwSwapBuffers(window); // swap the color buffers

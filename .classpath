@@ -39,5 +39,31 @@
 	<classpathentry kind="lib" path="D:/libraries/lwjgl-opengl/lwjgl-opengl-natives-windows-arm64.jar"/>
 	<classpathentry kind="lib" path="D:/libraries/lwjgl-opengl/lwjgl-opengl-natives-windows-x86.jar"/>
 	<classpathentry kind="lib" path="D:/libraries/lwjgl-opengl/lwjgl-opengl-sources.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/ibxm.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/jinput.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/jnlp.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/lwjgl.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/lwjgl_util_applet.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/natives-linux.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/natives-mac.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/natives-windows.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/slick.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/slick2d-core-1.0.1.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/slick-examples.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/slick/tinylinepp.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-javadoc.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-natives-linux.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-natives-linux-arm32.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-natives-linux-arm64.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-natives-macos.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-natives-macos-arm64.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-natives-windows.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-natives-windows-arm64.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-natives-windows-x86.jar"/>
+	<classpathentry kind="lib" path="D:/libraries/lwjgl-stb/lwjgl-stb-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

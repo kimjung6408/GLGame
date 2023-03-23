@@ -1,8 +1,13 @@
 #version 330 core
 
 in vec3 position;
+in vec2 texCoords;
 
 out vec3 color;
+out vec2 passTexCoords;
+
+uniform mat4 transformationMatrix;
+
 
 void main(void)
 {
@@ -11,4 +16,5 @@ void main(void)
 	
 	
 	color= vec3(position.x+0.5, 1.0, position.y+0.5);
+	passTexCoords=texCoords;
 }
