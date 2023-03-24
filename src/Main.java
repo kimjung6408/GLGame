@@ -2,13 +2,17 @@ import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
+import org.lwjgl.util.vector.Vector3f;
 
+import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
 import renderEngine.Loader;
 import renderEngine.Renderer;
 import shaders.StaticShader;
 import textures.ModelTexture;
+import timer.GameTimer;
+import window.MainWindow;
 
 import java.nio.*;
 
@@ -19,14 +23,10 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Main {
-
-	// The window handle
-	private long window;
 	
 	Loader loader;
 	Renderer renderer;
 	StaticShader staticShader;
-	
 
 	public void run() {
 		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -35,8 +35,8 @@ public class Main {
 		loop();
 
 		// Free the window callbacks and destroy the window
-		glfwFreeCallbacks(window);
-		glfwDestroyWindow(window);
+		glfwFreeCallbacks(MainWindow.HANDLE_ID);
+		glfwDestroyWindow(MainWindow.HANDLE_ID);
 
 		// Terminate GLFW and free the error callback
 		glfwTerminate();
@@ -58,12 +58,12 @@ public class Main {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
 
 		// Create the window
-		window = glfwCreateWindow(1280, 1024, "Touhou Souls", NULL, NULL);
-		if ( window == NULL )
+		MainWindow.HANDLE_ID = glfwCreateWindow(1280, 1024, "Touhou Souls", NULL, NULL);
+		if ( MainWindow.HANDLE_ID == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+		glfwSetKeyCallback(MainWindow.HANDLE_ID, (window, key, scancode, action, mods) -> {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
 		});
@@ -74,30 +74,28 @@ public class Main {
 			IntBuffer pHeight = stack.mallocInt(1); // int*
 
 			// Get the window size passed to glfwCreateWindow
-			glfwGetWindowSize(window, pWidth, pHeight);
+			glfwGetWindowSize(MainWindow.HANDLE_ID, pWidth, pHeight);
 
 			// Get the resolution of the primary monitor
 			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 			// Center the window
 			glfwSetWindowPos(
-				window,
+					MainWindow.HANDLE_ID,
 				(vidmode.width() - pWidth.get(0)) / 2,
 				(vidmode.height() - pHeight.get(0)) / 2
 			);
 		} // the stack frame is popped automatically
 
 		// Make the OpenGL context current
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(MainWindow.HANDLE_ID);
 		// Enable v-sync
 		glfwSwapInterval(1);
 
 		// Make the window visible
-		glfwShowWindow(window);
-	
-	}
-
-	private void loop() {
+		glfwShowWindow(MainWindow.HANDLE_ID);
+		
+		
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
 		// LWJGL detects the context that is current in the current thread,
@@ -105,46 +103,115 @@ public class Main {
 		// bindings available for use.		
 		GL.createCapabilities();
 		
-		loader=new Loader();
-		renderer=new Renderer();
-		staticShader=new StaticShader();
 		
-		 float[] vertices = {
-				    -0.5f, 0.5f, 0f,
-				    -0.5f, -0.5f, 0f,
-				    0.5f, -0.5f, 0f,
-				    0.5f, 0.5f, 0f,
-				  };
+		loader=new Loader();
+		renderer=new Renderer(MainWindow.HANDLE_ID);
+		staticShader=new StaticShader();
+	}
+
+	private void loop() {
+	
+		
+		float[] vertices = {			
+				-0.5f,0.5f,-0.5f,	
+				-0.5f,-0.5f,-0.5f,	
+				0.5f,-0.5f,-0.5f,	
+				0.5f,0.5f,-0.5f,		
+				
+				-0.5f,0.5f,0.5f,	
+				-0.5f,-0.5f,0.5f,	
+				0.5f,-0.5f,0.5f,	
+				0.5f,0.5f,0.5f,
+				
+				0.5f,0.5f,-0.5f,	
+				0.5f,-0.5f,-0.5f,	
+				0.5f,-0.5f,0.5f,	
+				0.5f,0.5f,0.5f,
+				
+				-0.5f,0.5f,-0.5f,	
+				-0.5f,-0.5f,-0.5f,	
+				-0.5f,-0.5f,0.5f,	
+				-0.5f,0.5f,0.5f,
+				
+				-0.5f,0.5f,0.5f,
+				-0.5f,0.5f,-0.5f,
+				0.5f,0.5f,-0.5f,
+				0.5f,0.5f,0.5f,
+				
+				-0.5f,-0.5f,0.5f,
+				-0.5f,-0.5f,-0.5f,
+				0.5f,-0.5f,-0.5f,
+				0.5f,-0.5f,0.5f
+				
+		};
+		
+		float[] texCoords = {
+				
+				0,0,
+				0,1,
+				1,1,
+				1,0,			
+				0,0,
+				0,1,
+				1,1,
+				1,0,			
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0
+
+				
+		};
+		
+		int[] indices = {
+				0,1,3,	
+				3,1,2,	
+				4,5,7,
+				7,5,6,
+				8,9,11,
+				11,9,10,
+				12,13,15,
+				15,13,14,	
+				16,17,19,
+				19,17,18,
+				20,21,23,
+				23,21,22
+
+		};
 		 
-		 int[] indices=
-			 {
-					 0,1,3,
-					 3,1,2
-			 };
-		 
-		 float[] texCoords= {
-			0,0,
-			0,1,
-			1,1,
-			1,0				 
-		 };
-		 
+
 		 
 		 RawModel model =loader.loadToVAO(vertices, texCoords,indices);
 		 ModelTexture texture=new ModelTexture(loader.loadTexture("girl"));
 		 TexturedModel texturedModel = new TexturedModel(model, texture);
+		 
+		 Entity entity=new Entity(texturedModel, new Vector3f(0,0,-2.5f), 0,0,0,1);
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
-		while ( !glfwWindowShouldClose(window) ) {
-			
+		while ( !glfwWindowShouldClose(MainWindow.HANDLE_ID) ) {
+			GameTimer.updateDeltaTime();
 			renderer.prepare();
 			
-			staticShader.start();
-			renderer.render(texturedModel);
-			staticShader.stop();
+			renderer.render(entity, staticShader);
+			
+			
+			entity.increaseRotation(360f*GameTimer.getDeltaTime(), 0, 0);
+			
 
-			glfwSwapBuffers(window); // swap the color buffers
+			glfwSwapBuffers(MainWindow.HANDLE_ID); // swap the color buffers
 
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
