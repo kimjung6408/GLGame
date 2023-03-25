@@ -12,9 +12,11 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
+import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
 import shaders.StaticShader;
@@ -29,11 +31,13 @@ public class Renderer {
 	
 	private Matrix4f projectionMatrix;
 	Camera camera;
+	Light light;
 	
 	public Renderer(long renderWindowID)
 	{
 		projectionMatrix=Maths.createProjectionMatrix(renderWindowID, FIELD_OF_VIEW, NEAR_PLANE, FAR_PLANE);
 		camera = new Camera();
+		light=new Light(new Vector3f(0, 20,20), new Vector3f(1,0.5f,0.5f));
 	}
 	
 	public void prepare()
@@ -55,6 +59,7 @@ public class Renderer {
 		GL30.glBindVertexArray(model.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
+		GL20.glEnableVertexAttribArray(2);
 		
 		
 		Matrix4f transformMatrix = Maths.createTransformMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
@@ -62,6 +67,7 @@ public class Renderer {
 		shader.loadTransformMatrix(transformMatrix);
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadViewMatrix(camera);
+		shader.loadLight(light);
 		
 		
 		GL13.glActiveTexture(0);
@@ -73,6 +79,7 @@ public class Renderer {
 		
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
 		
 		shader.stop();

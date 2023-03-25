@@ -33,7 +33,7 @@ public class Loader {
 	
 	
 	
-	public RawModel loadToVAO(float[] positions, float[] texCoords, int[] indices)
+	public RawModel loadToVAO(float[] positions, float[] texCoords, float[] normals, int[] indices)
 	{
 		int vaoID=createVAO();
 		VAOs.add(vaoID);
@@ -42,6 +42,7 @@ public class Loader {
 		
 		storeDataInAttributeList(0,3, positions);
 		storeDataInAttributeList(1,2, texCoords);
+		storeDataInAttributeList(2,3, normals);
 		unbindVAO();
 		
 		return new RawModel(vaoID, indices.length);

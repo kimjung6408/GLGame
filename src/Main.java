@@ -8,6 +8,7 @@ import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
 import renderEngine.Loader;
+import renderEngine.OBJLoader;
 import renderEngine.Renderer;
 import shaders.StaticShader;
 import textures.ModelTexture;
@@ -193,11 +194,14 @@ public class Main {
 		 
 
 		 
-		 RawModel model =loader.loadToVAO(vertices, texCoords,indices);
-		 ModelTexture texture=new ModelTexture(loader.loadTexture("girl"));
+		 RawModel model =OBJLoader.loadObjModel("dragon", loader);
+		 ModelTexture texture=new ModelTexture(loader.loadTexture("white"));
 		 TexturedModel texturedModel = new TexturedModel(model, texture);
 		 
 		 Entity entity=new Entity(texturedModel, new Vector3f(0,0,-2.5f), 0,0,0,1);
+		 
+		 entity.increasePosition(0,-5,-10);
+		 entity.increaseRotation(0, 180, 0);
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
@@ -207,8 +211,8 @@ public class Main {
 			
 			renderer.render(entity, staticShader);
 			
+			entity.increaseRotation(0, 180f*GameTimer.getDeltaTime(), 0);
 			
-			entity.increaseRotation(360f*GameTimer.getDeltaTime(), 0, 0);
 			
 
 			glfwSwapBuffers(MainWindow.HANDLE_ID); // swap the color buffers
