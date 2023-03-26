@@ -7,6 +7,7 @@ in vec3 normal;
 out vec2 passTexCoords;
 out vec3 toLightVector;
 out vec3 surfaceNormal;
+out vec3 toCameraVector;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
@@ -24,6 +25,9 @@ void main(void)
 	//where to render the vertex on the screen
 	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0);
 	
+	//get CameraPosition
+	vec3 cameraPosition=(inverse(viewMatrix)*vec4(0.0,0.0,0.0,1.0)).xyz;
+	toCameraVector = cameraPosition-worldPosition;
 	
 	passTexCoords=texCoords;
 }

@@ -5,9 +5,11 @@ import org.lwjgl.system.*;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Entity;
+import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
 import renderEngine.Loader;
+import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
 import renderEngine.Renderer;
 import shaders.StaticShader;
@@ -26,8 +28,6 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
 	
 	Loader loader;
-	Renderer renderer;
-	StaticShader staticShader;
 
 	public void run() {
 		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -106,123 +106,48 @@ public class Main {
 		
 		
 		loader=new Loader();
-		renderer=new Renderer(MainWindow.HANDLE_ID);
-		staticShader=new StaticShader();
 	}
 
 	private void loop() {
-	
-		
-		float[] vertices = {			
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,0.5f,-0.5f,		
-				
-				-0.5f,0.5f,0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				0.5f,0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				-0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,0.5f,
-				-0.5f,0.5f,-0.5f,
-				0.5f,0.5f,-0.5f,
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,-0.5f,0.5f,
-				-0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,0.5f
-				
-		};
-		
-		float[] texCoords = {
-				
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0
-
-				
-		};
-		
-		int[] indices = {
-				0,1,3,	
-				3,1,2,	
-				4,5,7,
-				7,5,6,
-				8,9,11,
-				11,9,10,
-				12,13,15,
-				15,13,14,	
-				16,17,19,
-				19,17,18,
-				20,21,23,
-				23,21,22
-
-		};
 		 
-
+		Light sun =new Light(new Vector3f(0.0f, 10f, 10f))
 		 
 		 RawModel model =OBJLoader.loadObjModel("dragon", loader);
 		 ModelTexture texture=new ModelTexture(loader.loadTexture("white"));
 		 TexturedModel texturedModel = new TexturedModel(model, texture);
+		 ModelTexture textureMaterial=texturedModel.getTexture();
+		 
+		 //set specular attribute
+		 textureMaterial.setShineDamper(10);
+		 textureMaterial.setReflectivity(1);
+		 
 		 
 		 Entity entity=new Entity(texturedModel, new Vector3f(0,0,-2.5f), 0,0,0,1);
 		 
 		 entity.increasePosition(0,-5,-10);
 		 entity.increaseRotation(0, 180, 0);
 
+		 MasterRenderer renderer=new MasterRenderer();
+		 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(MainWindow.HANDLE_ID) ) {
 			GameTimer.updateDeltaTime();
-			renderer.prepare();
 			
-			renderer.render(entity, staticShader);
-			
+
 			entity.increaseRotation(0, 180f*GameTimer.getDeltaTime(), 0);
 			
-			
 
+			
+			renderer.render(null, null);
 			glfwSwapBuffers(MainWindow.HANDLE_ID); // swap the color buffers
 
+			
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
 		}
 		
-		staticShader.cleanUp();
 		loader.cleanUp();
 		
 		
