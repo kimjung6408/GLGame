@@ -35,8 +35,6 @@ public class Renderer {
 	
 	
 	private Matrix4f projectionMatrix;
-	Camera camera;
-	Light light;
 	StaticShader shader;
 	
 	public Renderer(StaticShader shader)
@@ -44,9 +42,6 @@ public class Renderer {
 		//set shader program
 		this.shader=shader;
 		
-		//Backface culling
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
 		
 		//Load projection matrix
 		projectionMatrix=Maths.createProjectionMatrix(MainWindow.HANDLE_ID, FIELD_OF_VIEW, NEAR_PLANE, FAR_PLANE);
@@ -54,6 +49,11 @@ public class Renderer {
 	
 	public void prepare()
 	{
+		//enable backface culling
+		//Backface culling
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
+		
 		//enable depth test
 		//enable color buffer
 		
@@ -62,10 +62,15 @@ public class Renderer {
 		
 		//clear screen
 		GL11.glClearColor(0,0,0,1);
+		
 	}
 	
 	public void render(Map<TexturedModel, List<Entity>> entities)
 	{
+		//load projection Matrix
+		shader.loadProjectionMatrix(projectionMatrix);
+		
+		
 		for(TexturedModel model: entities.keySet())
 		{
 			prepareTexturedModel(model);
@@ -76,7 +81,7 @@ public class Renderer {
 				prepareInstance(entity);
 				
 				//render
-				GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModel().getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();
 		}

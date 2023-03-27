@@ -23,6 +23,7 @@ public class MasterRenderer {
 	{
 		renderer.prepare();
 		shader.start();
+		
 		shader.loadLight(sun);
 		shader.loadViewMatrix(camera);
 		

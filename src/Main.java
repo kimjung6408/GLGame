@@ -4,6 +4,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 import org.lwjgl.util.vector.Vector3f;
 
+import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import models.RawModel;
@@ -109,10 +110,14 @@ public class Main {
 	}
 
 	private void loop() {
+		
+		Vector3f sunPosition =new Vector3f(0.0f, 20f, 2f);
+		Vector3f sunLightColor = new Vector3f(1.0f, 1.0f, 1.0f);
+		Light sun =new Light(sunPosition, sunLightColor);
+		
+		Camera camera = new Camera();
 		 
-		Light sun =new Light(new Vector3f(0.0f, 10f, 10f))
-		 
-		 RawModel model =OBJLoader.loadObjModel("dragon", loader);
+		 RawModel model =OBJLoader.loadObjModel("bunny", loader);
 		 ModelTexture texture=new ModelTexture(loader.loadTexture("white"));
 		 TexturedModel texturedModel = new TexturedModel(model, texture);
 		 ModelTexture textureMaterial=texturedModel.getTexture();
@@ -133,22 +138,26 @@ public class Main {
 		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(MainWindow.HANDLE_ID) ) {
 			GameTimer.updateDeltaTime();
-			
+			camera.move();
+			renderer.processEntity(entity);
 
 			entity.increaseRotation(0, 180f*GameTimer.getDeltaTime(), 0);
 			
 
 			
-			renderer.render(null, null);
+			renderer.render(sun, camera);
 			glfwSwapBuffers(MainWindow.HANDLE_ID); // swap the color buffers
 
 			
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
+			
+			
 		}
 		
 		loader.cleanUp();
+		renderer.cleanUp();
 		
 		
 	}
